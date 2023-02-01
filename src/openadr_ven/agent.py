@@ -111,7 +111,7 @@ class OpenADRVenAgent(Agent):
 
         # add reports
         _log.info("Adding reports...")
-        self._add_reports()
+        self.add_reports()
 
         _log.info("Starting OpenADRVen agent...")
         gevent.spawn_later(3, self._start_asyncio_loop)
@@ -146,25 +146,25 @@ class OpenADRVenAgent(Agent):
 
     # ***************** Methods for Offering Reports to a VTN ********************
 
-    def _add_reports(self):
+    def add_reports(self):
         # add reports at startup of this agent
         # Insert your custom reports that you want to offer to the VTN at startup
         # Below is an example:
-        # device = 'Device001'
-        # self.ven_client.add_report(
-        #     callback=partial(self.read_voltage, device=device),
-        #     resource_id=device,
-        #     report_name=OpenADRReportName.TELEMETRY_USAGE,
-        #     measurement=OpenADRMeasurements.VOLTAGE,
-        #     unit="V")
+        device = 'Device001'
+        self.ven_client.add_report(
+            callback=partial(self.read_voltage, device=device),
+            resource_id=device,
+            report_name=OpenADRReportName.TELEMETRY_USAGE,
+            measurement=OpenADRMeasurements.VOLTAGE,
+            unit="V")
         return
 
     # Adding reports requires a callback; below is an example of a callboack for the report example above
-    # async def read_voltage(self, device):
-    #     _log.info(f"Reading voltage from device {device}")
-    #     ## Add logic to read voltage from a device
-    #     await asyncio.sleep(5)
-    #     return 42
+    async def read_voltage(self, device):
+        _log.info(f"Reading voltage from device {device}")
+        ## Add logic to read voltage from a device
+        await asyncio.sleep(5)
+        return 42
 
     @RPC.export
     def add_report_capability(self, callback: Callable,
